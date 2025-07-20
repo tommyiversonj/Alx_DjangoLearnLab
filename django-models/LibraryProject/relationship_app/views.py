@@ -1,10 +1,11 @@
-from django.shortcuts import render
-from django.views.generic.detail import DetailView
-from .models import Library, Book  # Import both Library and Book here
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # <-- must be here
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from .models import Library, Book
+from django.views.generic.detail import DetailView
+
+
 
 # Function-based view
 def list_books(request):

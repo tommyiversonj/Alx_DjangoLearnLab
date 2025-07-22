@@ -39,6 +39,12 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+    
+    ROLE_CHOICES = (
+    ('Admin', 'Admin'),
+    ('Librarian', 'Librarian'),
+    ('Member', 'Member'),
+)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to Django's built-in User model

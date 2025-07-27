@@ -9,15 +9,23 @@ from django.http import HttpResponseForbidden
 from .models import UserProfile
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
+from django.shortcuts import redirect
+
+
+from django.contrib.auth.views import LoginView, LogoutView
+
+
+def home(request):
+    return redirect('list_books')
 
 def list_books(request):
-	books = Book.objects.all()
-	return render(request, "relationship_app/list_books.html", {'books': books})
+    books = Book.objects.all()
+    return render(request, "relationship_app/list_books.html", {'books': books})
 
 class LibraryDetailView(DetailView):
-	model = Library
-	template_name = 'relationship_app/library_detail.html'
-	context_object_name = 'library'
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -34,7 +42,7 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
-	
+
 def is_admin(user):
     return user.userprofile.role == 'Admin'
 

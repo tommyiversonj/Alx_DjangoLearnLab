@@ -3,18 +3,28 @@ from django.db import models
 # Create your models here.
 # Author model
 class Author(models.Model):
-    name = models.CharField(max_length=255, help_text="Name of the author")
+    """
+    Represents an author in the system.
+    Each author can have multiple books.
+    """
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
-# Book model
+
 class Book(models.Model):
-    title = models.CharField(max_length=255, help_text="Title of the book")
-    publication_year = models.IntegerField(help_text="Year of publication")
+    """
+    Represents a book written by an author.
+    Linked to Author via a ForeignKey (one-to-many relationship).
+    """
+    title = models.CharField(max_length=200)
+    publication_year = models.IntegerField()
     author = models.ForeignKey(
-        Author, related_name='books', on_delete=models.CASCADE, help_text="Author of the book"
+        Author,
+        related_name='books',  # Enables reverse lookup: author.books.all()
+        on_delete=models.CASCADE
     )
 
     def __str__(self):
-        return self.title
+        return f"{self.title} ({self.publication_year})"

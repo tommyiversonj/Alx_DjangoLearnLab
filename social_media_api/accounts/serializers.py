@@ -1,50 +1,29 @@
-# accounts/serializers.py
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from django.contrib.auth import authenticate, get_user_model
+from rest_framework.authtoken.models import Token
 
-# get_user_model() retrieves your custom user model as set in settings.py
-User = get_user_model()
-
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    """
-    Serializer to handle new user registration.
-    """
-    password = serializers.CharField(write_only=True)
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField()
 
     class Meta:
-        model = User
-        fields = ['username', 'email', 'password', 'bio', 'profile_picture']
+        model = get_user_model()  # Uses the custom user model
+        fields = ('username', 'email', 'password', 'bio', 'profile_picture')
 
     def create(self, validated_data):
-        # This uses the custom user manager to create a user.
-        user = User.objects.create_user(**validated_data)
-        return user
+        # Create the user using the validated data
+        user = get_user_model().objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            bio=validated_data.get('bio', ''),
+            profile_picture=validated_data.get('profile_picture', None),
+        )
+        # Create a token for the new user
+        token = Token.objects.create(user=user)  # Token is created here
+        return user, token
 
-class UserLoginSerializer(serializers.Serializer):
-    """
-    Serializer to validate user credentials for login.
-    """
-    username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
-
-    def validate(self, data):
-        username = data.get('username')
-        password = data.get('password')
-
-        if not username or not password:
-            raise serializers.ValidationError("Must include 'username' and 'password'.")
-
-        user = authenticate(username=username, password=password)
-        if not user:
-            raise serializers.ValidationError("Unable to log in with provided credentials.")
-        
-        # Return the authenticated user instance
-        return user
 
 class UserSerializer(serializers.ModelSerializer):
-    """
-    Serializer to display user profile data.
-    """
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
+        model = get_user_model()
+        fields = ('username', 'email', 'bio', 'profile_picture', 'followers')

@@ -88,6 +88,18 @@ DATABASES = {
 }
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'social_media_db',     # database name
+        'USER': 'postgres',         # database user
+        'PASSWORD': '@1992myown',  # database password
+        'HOST': 'localhost',           # or your DB server IP/hostname
+        'PORT': '5433',                # default PostgreSQL port
+    }
+}
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

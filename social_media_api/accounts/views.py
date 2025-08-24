@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
 
+
 User = get_user_model()
 
 class UserRegistrationView(APIView):
